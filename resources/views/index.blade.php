@@ -9,9 +9,9 @@
 </head>
 <body>
 <div id="app">
-    <example-component></example-component>
+    <calendar-component></calendar-component>
 </div>
-<script src="./js/app.js">
+<script src="{{mix('js/app.js')}}">
 
 </script>
 </body>
