@@ -26,6 +26,7 @@ export default {
                 selectMirror: true,
                 dayMaxEvents: true,
                 weekends: true,
+                events:  this.showRecords,
                 select: this.handleDateSelect,
                 eventClick: this.handleEventClick,
                 eventsSet: this.handleEvents,
@@ -54,6 +55,12 @@ export default {
         },
         clickDate(events) {
             alert('date cledsfsdfsdfck')
+        },
+        showRecords(){
+            axios
+            .get('/admin/calendar/records').then((response)=>{
+                this.calendarOptions.events = response.data
+            })
         }
 
     }

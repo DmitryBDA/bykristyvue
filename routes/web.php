@@ -22,6 +22,8 @@ Route::get('/', function () {
 Route::get('/admin', [IndexController::class, 'index'])->name('admin.index');
 
 Route::get('/admin/calendar', [CalendarController::class, 'index'])->name('admin.calendar.index');
+
+Route::get('/admin/calendar/records', [CalendarController::class, 'records'])->name('admin.calendar.records');
 //Auth::routes();
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -16182,6 +16182,7 @@ __webpack_require__.r(__webpack_exports__);
         selectMirror: true,
         dayMaxEvents: true,
         weekends: true,
+        events: this.showRecords,
         select: this.handleDateSelect,
         eventClick: this.handleEventClick,
         eventsSet: this.handleEvents,
@@ -16205,6 +16206,13 @@ __webpack_require__.r(__webpack_exports__);
     handleEvents: function handleEvents(events) {},
     clickDate: function clickDate(events) {
       alert('date cledsfsdfsdfck');
+    },
+    showRecords: function showRecords() {
+      var _this = this;
+
+      axios.get('/admin/calendar/records').then(function (response) {
+        _this.calendarOptions.events = response.data;
+      });
     }
   }
 });
