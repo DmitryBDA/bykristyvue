@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\CalendarController;
+use App\Http\Controllers\Admin\IndexController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,6 +19,9 @@ Route::get('/', function () {
     return view('index');
 });
 
+Route::get('/admin', [IndexController::class, 'index'])->name('admin.index');
+
+Route::get('/admin/calendar', [CalendarController::class, 'index'])->name('admin.calendar.index');
 //Auth::routes();
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
