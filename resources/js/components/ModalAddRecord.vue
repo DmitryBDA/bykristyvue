@@ -12,16 +12,16 @@
 
                     <form class="_form_add-records" :data-date="dateClick">
                         <div class="card-body">
-                            <div class="form-group _time_records">
+                            <div v-if="inputTime.length" class="form-group _time_records">
                                 <label>Время</label>
                             </div>
+                            <p v-if="inputTime.length === 0">Добавьте новую запись</p>
                             <template v-for="(item, idx) in inputTime">
                                 <div class="input-group mb-3 _time_record">
 
-                                    <input  type="time" name="myself_time" class="form-control" value="00:00">
-                                    <input  type="time" name="time" class="form-control" value="00:00">
-                                    <input  type="text" name="myself_title" class="form-control">
-                                    <div @click="deleteInputTime(idx)" class="input-group-append">
+                                    <input @input="inputChange(idx, $event)"  type="time" name="time" class="form-control" :value="item.value">
+                                    <input v-if="item.typeRecord" @input="inputChange(idx, $event)" type="text" name="title" :value="item.title" class="form-control">
+                                    <div @click="inputDelete(idx)" class="input-group-append">
                                         <span class="input-group-text"><i class="fas fa-times"></i></span>
                                     </div>
                                 </div>
@@ -29,9 +29,9 @@
                         </div>
 
                         <div class="card-footer">
-                            <button @click="add(false)" type="button" class="btn btn-primary ml-0">Добавить</button>
-                            <button @click="add(true)" type="button" class="btn btn-primary ml-0 ">Личное</button>
-                            <button type="submit" class="btn btn-primary mr-0 ">Сохранить</button>
+                            <button @click="inputAdd(false)" type="button" class="btn btn-primary ml-0">Добавить</button>
+                            <button @click="inputAdd(true)" type="button" class="btn btn-primary ml-0 ">Личное</button>
+                            <button :disabled="isDisabled" type="submit" class="btn btn-primary mr-0 ">Сохранить</button>
                         </div>
 
                     </form>
@@ -44,6 +44,21 @@
 <script>
 export default {
     props:['dateClick'],
+    watch: {
+        dateClick: function(newVal, oldVal) {
+            this.inputTime = [
+                {
+                    typeRecord:false,
+                    value:'00:00',
+                    status: 1,
+                    title: ''
+                }
+            ]
+            if(this.isDisabled){
+                this.isDisabled = false
+            }
+        }
+    },
     data() {
         return {
             inputTime: [
@@ -58,19 +73,29 @@ export default {
         }
     },
     methods: {
-        add: function (type) {
+        inputAdd: function (type) {
             this.inputTime.push({
                 typeRecord:type,
                 value:'00:00',
                 status: type ? 4 : 1,
                 title: ''
             })
+            if(this.isDisabled){
+                this.isDisabled = false
+            }
         },
-        deleteInputTime(idx) {
-
+        inputDelete(idx) {
+            this.inputTime.splice(idx, 1)
+            if( this.inputTime.length === 0){
+                this.isDisabled = true
+            }
         },
         inputChange(idx, event){
-
+            if(event.target.name === 'title'){
+                this.inputTime[idx].title = event.target.value
+            } else {
+                this.inputTime[idx].value = event.target.value
+            }
         },
         saveRecords(event){
 

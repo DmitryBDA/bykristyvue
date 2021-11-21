@@ -16315,6 +16315,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['dateClick'],
+  watch: {
+    dateClick: function dateClick(newVal, oldVal) {
+      this.inputTime = [{
+        typeRecord: false,
+        value: '00:00',
+        status: 1,
+        title: ''
+      }];
+
+      if (this.isDisabled) {
+        this.isDisabled = false;
+      }
+    }
+  },
   data: function data() {
     return {
       inputTime: [{
@@ -16327,16 +16341,32 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    add: function add(type) {
+    inputAdd: function inputAdd(type) {
       this.inputTime.push({
         typeRecord: type,
         value: '00:00',
         status: type ? 4 : 1,
         title: ''
       });
+
+      if (this.isDisabled) {
+        this.isDisabled = false;
+      }
     },
-    deleteInputTime: function deleteInputTime(idx) {},
-    inputChange: function inputChange(idx, event) {},
+    inputDelete: function inputDelete(idx) {
+      this.inputTime.splice(idx, 1);
+
+      if (this.inputTime.length === 0) {
+        this.isDisabled = true;
+      }
+    },
+    inputChange: function inputChange(idx, event) {
+      if (event.target.name === 'title') {
+        this.inputTime[idx].title = event.target.value;
+      } else {
+        this.inputTime[idx].value = event.target.value;
+      }
+    },
     saveRecords: function saveRecords(event) {},
     testFunc: function testFunc() {
       alert('yes');
@@ -52927,7 +52957,15 @@ var render = function () {
                   "div",
                   { staticClass: "card-body" },
                   [
-                    _vm._m(1),
+                    _vm.inputTime.length
+                      ? _c("div", { staticClass: "form-group _time_records" }, [
+                          _c("label", [_vm._v("Время")]),
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.inputTime.length === 0
+                      ? _c("p", [_vm._v("Добавьте новую запись")])
+                      : _vm._e(),
                     _vm._v(" "),
                     _vm._l(_vm.inputTime, function (item, idx) {
                       return [
@@ -52937,26 +52975,27 @@ var render = function () {
                           [
                             _c("input", {
                               staticClass: "form-control",
-                              attrs: {
-                                type: "time",
-                                name: "myself_time",
-                                value: "00:00",
+                              attrs: { type: "time", name: "time" },
+                              domProps: { value: item.value },
+                              on: {
+                                input: function ($event) {
+                                  return _vm.inputChange(idx, $event)
+                                },
                               },
                             }),
                             _vm._v(" "),
-                            _c("input", {
-                              staticClass: "form-control",
-                              attrs: {
-                                type: "time",
-                                name: "time",
-                                value: "00:00",
-                              },
-                            }),
-                            _vm._v(" "),
-                            _c("input", {
-                              staticClass: "form-control",
-                              attrs: { type: "text", name: "myself_title" },
-                            }),
+                            item.typeRecord
+                              ? _c("input", {
+                                  staticClass: "form-control",
+                                  attrs: { type: "text", name: "title" },
+                                  domProps: { value: item.title },
+                                  on: {
+                                    input: function ($event) {
+                                      return _vm.inputChange(idx, $event)
+                                    },
+                                  },
+                                })
+                              : _vm._e(),
                             _vm._v(" "),
                             _c(
                               "div",
@@ -52964,11 +53003,11 @@ var render = function () {
                                 staticClass: "input-group-append",
                                 on: {
                                   click: function ($event) {
-                                    return _vm.deleteInputTime(idx)
+                                    return _vm.inputDelete(idx)
                                   },
                                 },
                               },
-                              [_vm._m(2, true)]
+                              [_vm._m(1, true)]
                             ),
                           ]
                         ),
@@ -52986,7 +53025,7 @@ var render = function () {
                       attrs: { type: "button" },
                       on: {
                         click: function ($event) {
-                          return _vm.add(false)
+                          return _vm.inputAdd(false)
                         },
                       },
                     },
@@ -53000,7 +53039,7 @@ var render = function () {
                       attrs: { type: "button" },
                       on: {
                         click: function ($event) {
-                          return _vm.add(true)
+                          return _vm.inputAdd(true)
                         },
                       },
                     },
@@ -53011,7 +53050,7 @@ var render = function () {
                     "button",
                     {
                       staticClass: "btn btn-primary mr-0 ",
-                      attrs: { type: "submit" },
+                      attrs: { disabled: _vm.isDisabled, type: "submit" },
                     },
                     [_vm._v("Сохранить")]
                   ),
@@ -53044,14 +53083,6 @@ var staticRenderFns = [
         },
         [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
       ),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group _time_records" }, [
-      _c("label", [_vm._v("Время")]),
     ])
   },
   function () {
