@@ -4,8 +4,11 @@ import FullCalendar from '@fullcalendar/vue'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 
+import ModalAddRecord from "./ModalAddRecord";
+
 export default {
     components: {
+        ModalAddRecord,
         FullCalendar // make the <FullCalendar> tag available
     },
     data: function() {
@@ -27,7 +30,6 @@ export default {
                 dayMaxEvents: true,
                 weekends: true,
                 events:  this.showRecords,
-                select: this.handleDateSelect,
                 eventClick: this.handleEventClick,
                 eventsSet: this.handleEvents,
                 dateClick: this.clickDate
@@ -37,7 +39,8 @@ export default {
                 eventRemove:
                 */
             },
-            currentEvents: []
+            currentEvents: [],
+            dateClick:''
         }
     },
     methods: {
@@ -53,8 +56,10 @@ export default {
         handleEvents(events) {
 
         },
-        clickDate(events) {
-            alert('date cledsfsdfsdfck')
+        clickDate(event) {
+            this.dateClick = event.dateStr
+            const elem = this.$refs.open_modal_add_records;
+            elem.click();
         },
         showRecords(){
             axios
@@ -67,5 +72,9 @@ export default {
 }
 </script>
 <template>
-    <FullCalendar :options="calendarOptions" />
+    <div>
+        <FullCalendar :options="calendarOptions" />
+        <modal-add-record :dateClick="dateClick"></modal-add-record>
+        <button style="display: none" data-toggle="modal" data-target="#modal-add-records" ref="open_modal_add_records"></button>
+    </div>
 </template>
