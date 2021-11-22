@@ -10,7 +10,7 @@
                         </button>
                     </div>
 
-                    <form class="_form_add-records" :data-date="dateClick">
+                    <form @submit.prevent="saveRecords($event)" :data-date="dateClick" class="_form_add-records" >
                         <div class="card-body">
                             <div v-if="inputTime.length" class="form-group _time_records">
                                 <label>Время</label>
@@ -98,7 +98,10 @@ export default {
             }
         },
         saveRecords(event){
-
+            axios.post('/admin/calendar/create-records', {timeRecords:this.inputTime, date:event.target.attributes[0].nodeValue}).then((response)=>{
+                $('#modal-add-records').click()
+                this.$emit('restartCalendar')
+            })
         },
         testFunc(){
             alert('yes')
