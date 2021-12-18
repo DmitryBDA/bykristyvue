@@ -57,8 +57,9 @@ export default {
         handleDateSelect(selectInfo) {
             alert('hello sdfsdf')
         },
-        handleEventClick(clickInfo) {
-
+        handleEventClick() {
+            const elem = this.$refs.open_modal_action_records;
+            elem.click();
         },
         handleEvents(events) {
 
@@ -86,6 +87,9 @@ export default {
         <FullCalendar :options="calendarOptions" ref="fullCalendar" />
         <modal-add-record :dateClick="dateClick" @restartCalendar="restartCalendar"></modal-add-record>
         <button style="display: none" data-toggle="modal" data-target="#modal-add-records" ref="open_modal_add_records"></button>
+
+        <modal-action-record></modal-action-record>
+        <button style="display: none" data-toggle="modal" data-target="#modal-action-with-records" ref="open_modal_action_records"></button>
 
     </div>
 </template>
