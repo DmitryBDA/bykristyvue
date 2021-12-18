@@ -16203,7 +16203,8 @@ __webpack_require__.r(__webpack_exports__);
 
       },
       currentEvents: [],
-      dateClick: ''
+      dateClick: '',
+      recordId: ''
     };
   },
   methods: {
@@ -16211,9 +16212,8 @@ __webpack_require__.r(__webpack_exports__);
     handleDateSelect: function handleDateSelect(selectInfo) {
       alert('hello sdfsdf');
     },
-    handleEventClick: function handleEventClick() {
-      var elem = this.$refs.open_modal_action_records;
-      elem.click();
+    handleEventClick: function handleEventClick(el) {
+      this.recordId = el.event._def.publicId;
     },
     handleEvents: function handleEvents(events) {},
     clickDate: function clickDate(event) {
@@ -16275,8 +16275,13 @@ __webpack_require__.r(__webpack_exports__);
 /*!************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ModalActionRecord.vue?vue&type=script&lang=js& ***!
   \************************************************************************************************************************************************************************************************************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
 //
 //
 //
@@ -16340,8 +16345,41 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: ['recordId'],
+  watch: {
+    recordId: function recordId(newVal, oldVal) {
+      var _this = this;
+
+      axios.post('/admin/calendar/get-data-record', {
+        recordId: newVal
+      }).then(function (response) {
+        console.log(response.data);
+        _this.date = response.data.date;
+        _this.time = response.data.time;
+        _this.name = response.data.name;
+        _this.phone = response.data.phone;
+        _this.services = response.data.services;
+        _this.serviceId = response.data.serviceId;
+        var elem = _this.$refs.open_modal_action_records;
+        elem.click();
+      });
+    }
+  },
+  data: function data() {
+    return {
+      date: '',
+      time: '',
+      name: '',
+      phone: '',
+      services: '',
+      serviceId: ''
+    };
+  },
+  mounted: function mounted() {
+    console.log('Component mounted.');
+  }
+});
 
 /***/ }),
 
@@ -52863,9 +52901,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _ModalActionRecord_vue_vue_type_template_id_a34906ce___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ModalActionRecord.vue?vue&type=template&id=a34906ce& */ "./resources/js/components/ModalActionRecord.vue?vue&type=template&id=a34906ce&");
 /* harmony import */ var _ModalActionRecord_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ModalActionRecord.vue?vue&type=script&lang=js& */ "./resources/js/components/ModalActionRecord.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ var __WEBPACK_REEXPORT_OBJECT__ = {};
-/* harmony reexport (unknown) */ for(const __WEBPACK_IMPORT_KEY__ in _ModalActionRecord_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== "default") __WEBPACK_REEXPORT_OBJECT__[__WEBPACK_IMPORT_KEY__] = () => _ModalActionRecord_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[__WEBPACK_IMPORT_KEY__]
-/* harmony reexport (unknown) */ __webpack_require__.d(__webpack_exports__, __WEBPACK_REEXPORT_OBJECT__);
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -52975,11 +53010,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalActionRecord_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ModalActionRecord.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ModalActionRecord.vue?vue&type=script&lang=js&");
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalActionRecord_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalActionRecord_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ var __WEBPACK_REEXPORT_OBJECT__ = {};
-/* harmony reexport (unknown) */ for(const __WEBPACK_IMPORT_KEY__ in _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalActionRecord_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== "default") __WEBPACK_REEXPORT_OBJECT__[__WEBPACK_IMPORT_KEY__] = () => _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalActionRecord_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[__WEBPACK_IMPORT_KEY__]
-/* harmony reexport (unknown) */ __webpack_require__.d(__webpack_exports__, __WEBPACK_REEXPORT_OBJECT__);
- /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalActionRecord_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default())); 
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalActionRecord_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
@@ -53115,16 +53146,7 @@ var render = function () {
         attrs: { "data-toggle": "modal", "data-target": "#modal-add-records" },
       }),
       _vm._v(" "),
-      _c("modal-action-record"),
-      _vm._v(" "),
-      _c("button", {
-        ref: "open_modal_action_records",
-        staticStyle: { display: "none" },
-        attrs: {
-          "data-toggle": "modal",
-          "data-target": "#modal-action-with-records",
-        },
-      }),
+      _c("modal-action-record", { attrs: { recordId: _vm.recordId } }),
     ],
     1
   )
@@ -53200,231 +53222,190 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", [
+    _c(
+      "div",
+      { staticClass: "modal fade", attrs: { id: "modal-action-with-records" } },
+      [
+        _c("div", { staticClass: "modal-dialog" }, [
+          _c("div", { staticClass: "modal-content" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "_form_action_record" }, [
+              _c(
+                "form",
+                {
+                  staticClass: "form-horizontal _form_for_record",
+                  attrs: { "data-record-id": _vm.recordId },
+                },
+                [
+                  _c("div", { staticClass: "card-body" }, [
+                    _c("p", [_vm._v("Выбранный день: " + _vm._s(_vm.date))]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group row" }, [
+                      _c("label", { staticClass: "col-sm-2 col-form-label" }, [
+                        _vm._v("Время"),
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-sm-10" }, [
+                        _c("input", {
+                          staticClass: "form-control _input_form_for_record",
+                          attrs: { type: "time", name: "time" },
+                          domProps: { value: _vm.time },
+                        }),
+                      ]),
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group row" }, [
+                      _c("label", { staticClass: "col-sm-2 col-form-label" }, [
+                        _vm._v("Услуга"),
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-sm-10" }, [
+                        _c(
+                          "select",
+                          {
+                            staticClass: "form-control _input_form_for_record",
+                            attrs: { name: "service", required: "" },
+                          },
+                          [
+                            _vm.serviceId == false
+                              ? _c("option", { attrs: { selected: "" } }, [
+                                  _vm._v("Не выбрано"),
+                                ])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm._l(_vm.services, function (item) {
+                              return _c(
+                                "option",
+                                {
+                                  domProps: {
+                                    value: item.id,
+                                    selected: _vm.serviceId == item.id,
+                                  },
+                                },
+                                [_vm._v(_vm._s(item.name))]
+                              )
+                            }),
+                          ],
+                          2
+                        ),
+                      ]),
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group row" }, [
+                      _c("label", { staticClass: "col-sm-2 col-form-label" }, [
+                        _vm._v("Имя"),
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-sm-10" }, [
+                        _c("input", {
+                          staticClass:
+                            "form-control add_name _input_form_for_record",
+                          attrs: {
+                            type: "text",
+                            name: "name",
+                            autocomplete: "off",
+                          },
+                          domProps: { value: _vm.name },
+                        }),
+                      ]),
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group row" }, [
+                      _c("label", { staticClass: "col-sm-2 col-form-label" }, [
+                        _vm._v("Телефон"),
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "input-group mb-3 col-sm-10" }, [
+                        _c("input", {
+                          staticClass:
+                            "form-control _paste_phone_auto _input_form_for_record",
+                          attrs: {
+                            type: "text",
+                            name: "phone",
+                            "data-inputmask": '"mask": "(999) 999-9999"',
+                            "data-mask": "",
+                            inputmode: "text",
+                          },
+                          domProps: { value: _vm.phone },
+                        }),
+                      ]),
+                    ]),
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(1),
+                ]
+              ),
+            ]),
+          ]),
+        ]),
+      ]
+    ),
+    _vm._v(" "),
+    _c("button", {
+      ref: "open_modal_action_records",
+      staticStyle: { display: "none" },
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#modal-action-with-records",
+      },
+    }),
+  ])
 }
 var staticRenderFns = [
   function () {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", [
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Выбор действия")]),
+      _vm._v(" "),
       _c(
-        "div",
+        "button",
         {
-          staticClass: "modal fade",
-          attrs: { id: "modal-action-with-records" },
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close",
+          },
         },
-        [
-          _c("div", { staticClass: "modal-dialog" }, [
-            _c("div", { staticClass: "modal-content" }, [
-              _c("div", { staticClass: "modal-header" }, [
-                _c("h4", { staticClass: "modal-title" }, [
-                  _vm._v("Выбор действия"),
-                ]),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "close",
-                    attrs: {
-                      type: "button",
-                      "data-dismiss": "modal",
-                      "aria-label": "Close",
-                    },
-                  },
-                  [
-                    _c("span", { attrs: { "aria-hidden": "true" } }, [
-                      _vm._v("×"),
-                    ]),
-                  ]
-                ),
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "_form_action_record" }, [
-                _c(
-                  "form",
-                  {
-                    staticClass: "form-horizontal _form_for_record",
-                    attrs: { "data-record-id": "179" },
-                  },
-                  [
-                    _c("div", { staticClass: "card-body" }, [
-                      _c("p", [_vm._v("Выбранный день: 20.12.2021 (пнд)")]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group row" }, [
-                        _c(
-                          "label",
-                          { staticClass: "col-sm-2 col-form-label" },
-                          [_vm._v("Время")]
-                        ),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-sm-10" }, [
-                          _c("input", {
-                            staticClass: "form-control _input_form_for_record",
-                            attrs: {
-                              type: "time",
-                              name: "time",
-                              value: "12:00",
-                            },
-                          }),
-                        ]),
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group row" }, [
-                        _c(
-                          "label",
-                          { staticClass: "col-sm-2 col-form-label" },
-                          [_vm._v("Услуга")]
-                        ),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-sm-10" }, [
-                          _c(
-                            "select",
-                            {
-                              staticClass:
-                                "form-control _input_form_for_record",
-                              attrs: { name: "service", required: "" },
-                            },
-                            [
-                              _c(
-                                "option",
-                                { attrs: { value: "", selected: "" } },
-                                [_vm._v("Не выбрано")]
-                              ),
-                              _vm._v(" "),
-                              _c("option", { attrs: { value: "1" } }, [
-                                _vm._v("Маникюр + укрепление"),
-                              ]),
-                              _vm._v(" "),
-                              _c("option", { attrs: { value: "2" } }, [
-                                _vm._v("Гигиечиский маникюр"),
-                              ]),
-                              _vm._v(" "),
-                              _c("option", { attrs: { value: "3" } }, [
-                                _vm._v("Наращивание"),
-                              ]),
-                              _vm._v(" "),
-                              _c("option", { attrs: { value: "4" } }, [
-                                _vm._v("Снятие материала"),
-                              ]),
-                            ]
-                          ),
-                        ]),
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group row" }, [
-                        _c(
-                          "label",
-                          { staticClass: "col-sm-2 col-form-label" },
-                          [_vm._v("Имя")]
-                        ),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-sm-10" }, [
-                          _c("input", {
-                            staticClass:
-                              "form-control add_name _input_form_for_record",
-                            attrs: {
-                              type: "text",
-                              name: "name",
-                              autocomplete: "off",
-                              value: "",
-                            },
-                          }),
-                          _c(
-                            "ul",
-                            {
-                              staticClass: "typeahead dropdown-menu",
-                              staticStyle: {
-                                top: "38px",
-                                left: "7.5px",
-                                display: "none",
-                              },
-                              attrs: { role: "listbox" },
-                            },
-                            [
-                              _c("li", { staticClass: "active" }, [
-                                _c(
-                                  "a",
-                                  {
-                                    staticClass: "dropdown-item",
-                                    attrs: { href: "#", role: "option" },
-                                  },
-                                  [
-                                    _c("strong", [_vm._v("Бело")]),
-                                    _vm._v("усов Дмитрий"),
-                                  ]
-                                ),
-                              ]),
-                            ]
-                          ),
-                        ]),
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group row" }, [
-                        _c(
-                          "label",
-                          { staticClass: "col-sm-2 col-form-label" },
-                          [_vm._v("Телефон")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          { staticClass: "input-group mb-3 col-sm-10" },
-                          [
-                            _c("input", {
-                              staticClass:
-                                "form-control _paste_phone_auto _input_form_for_record",
-                              attrs: {
-                                type: "text",
-                                name: "phone",
-                                "data-inputmask": '"mask": "(999) 999-9999"',
-                                "data-mask": "",
-                                inputmode: "text",
-                                value: "",
-                              },
-                            }),
-                          ]
-                        ),
-                      ]),
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "card-footer" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-info _add_user_on_record",
-                          attrs: { type: "submit" },
-                        },
-                        [_vm._v("Записать")]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          staticClass:
-                            "btn btn-success float-center _save_change_record",
-                          staticStyle: { display: "inline" },
-                          attrs: { "data-record-id": "179", type: "submit" },
-                        },
-                        [_vm._v("Сохранить")]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          staticClass:
-                            "btn btn-danger float-right _delete_record",
-                          attrs: { "data-record-id": "179", type: "button" },
-                        },
-                        [_vm._v("Удалить")]
-                      ),
-                    ]),
-                  ]
-                ),
-              ]),
-            ]),
-          ]),
-        ]
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      ),
+    ])
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-info _add_user_on_record",
+          attrs: { type: "submit" },
+        },
+        [_vm._v("Записать")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-success float-center _save_change_record",
+          staticStyle: { display: "inline" },
+          attrs: { "data-record-id": "179", type: "submit" },
+        },
+        [_vm._v("Сохранить")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-danger float-right _delete_record",
+          attrs: { "data-record-id": "179", type: "button" },
+        },
+        [_vm._v("Удалить")]
       ),
     ])
   },

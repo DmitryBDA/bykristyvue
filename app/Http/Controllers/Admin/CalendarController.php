@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Record;
+use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -59,6 +60,39 @@ class CalendarController extends Controller
 
         return response()->json($event);
 
-        exit();
+    }
+
+    public function getDataRecord(Request $request){
+
+        $recordId = $request->recordId;
+        $services = Service::all();
+
+        $event = Record::find($recordId);
+
+        $name = '';
+        $phone = '';
+        if($event->user){
+            $name = $event->user->surname . ' ' . $event->user->name;
+            $phone = $event->user->phone;
+        }
+
+        $serviceId = false;
+        if($event->service){
+            $serviceId = $event->service->id;
+        }
+
+        $date = Carbon::create($event->start);
+
+        $data = [
+            'date' => $date->format('d.m.Y') . ' ' . $date->format('(D)'),
+            'time' => $date->format('H:s'),
+            'name' => $name,
+            'phone' => $phone,
+            'serviceId' => $serviceId,
+            'services' => $services,
+        ];
+
+        return response()->json($data);
+
     }
 }
