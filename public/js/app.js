@@ -16214,6 +16214,11 @@ __webpack_require__.r(__webpack_exports__);
     },
     handleEventClick: function handleEventClick(el) {
       this.recordId = el.event._def.publicId;
+
+      if (this.$refs.action_record.idRecord == this.recordId) {
+        var elem = this.$refs.action_record.$refs.open_modal_action_records;
+        elem.click();
+      }
     },
     handleEvents: function handleEvents(events) {},
     clickDate: function clickDate(event) {
@@ -16345,6 +16350,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['recordId'],
   watch: {
@@ -16354,13 +16370,14 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('/admin/calendar/get-data-record', {
         recordId: newVal
       }).then(function (response) {
-        console.log(response.data);
         _this.date = response.data.date;
         _this.time = response.data.time;
         _this.name = response.data.name;
         _this.phone = response.data.phone;
         _this.services = response.data.services;
         _this.serviceId = response.data.serviceId;
+        _this.status = response.data.status;
+        _this.idRecord = newVal;
         var elem = _this.$refs.open_modal_action_records;
         elem.click();
       });
@@ -16373,7 +16390,10 @@ __webpack_require__.r(__webpack_exports__);
       name: '',
       phone: '',
       services: '',
-      serviceId: ''
+      serviceId: '',
+      status: '',
+      isEdit: false,
+      idRecord: ''
     };
   },
   mounted: function mounted() {
@@ -53146,7 +53166,10 @@ var render = function () {
         attrs: { "data-toggle": "modal", "data-target": "#modal-add-records" },
       }),
       _vm._v(" "),
-      _c("modal-action-record", { attrs: { recordId: _vm.recordId } }),
+      _c("modal-action-record", {
+        ref: "action_record",
+        attrs: { recordId: _vm.recordId },
+      }),
     ],
     1
   )
@@ -53231,11 +53254,11 @@ var render = function () {
           _c("div", { staticClass: "modal-content" }, [
             _vm._m(0),
             _vm._v(" "),
-            _c("div", { staticClass: "_form_action_record" }, [
+            _c("div", {}, [
               _c(
                 "form",
                 {
-                  staticClass: "form-horizontal _form_for_record",
+                  staticClass: "form-horizontal _form_action_record",
                   attrs: { "data-record-id": _vm.recordId },
                 },
                 [
@@ -53243,11 +53266,11 @@ var render = function () {
                     _c("p", [_vm._v("Выбранный день: " + _vm._s(_vm.date))]),
                     _vm._v(" "),
                     _c("div", { staticClass: "form-group row" }, [
-                      _c("label", { staticClass: "col-sm-2 col-form-label" }, [
+                      _c("label", { staticClass: "col-sm-3 col-form-label" }, [
                         _vm._v("Время"),
                       ]),
                       _vm._v(" "),
-                      _c("div", { staticClass: "col-sm-10" }, [
+                      _c("div", { staticClass: "col-sm-9" }, [
                         _c("input", {
                           staticClass: "form-control _input_form_for_record",
                           attrs: { type: "time", name: "time" },
@@ -53257,11 +53280,11 @@ var render = function () {
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "form-group row" }, [
-                      _c("label", { staticClass: "col-sm-2 col-form-label" }, [
+                      _c("label", { staticClass: "col-sm-3 col-form-label" }, [
                         _vm._v("Услуга"),
                       ]),
                       _vm._v(" "),
-                      _c("div", { staticClass: "col-sm-10" }, [
+                      _c("div", { staticClass: "col-sm-9" }, [
                         _c(
                           "select",
                           {
@@ -53294,11 +53317,11 @@ var render = function () {
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "form-group row" }, [
-                      _c("label", { staticClass: "col-sm-2 col-form-label" }, [
+                      _c("label", { staticClass: "col-sm-3 col-form-label" }, [
                         _vm._v("Имя"),
                       ]),
                       _vm._v(" "),
-                      _c("div", { staticClass: "col-sm-10" }, [
+                      _c("div", { staticClass: "col-sm-9" }, [
                         _c("input", {
                           staticClass:
                             "form-control add_name _input_form_for_record",
@@ -53313,28 +53336,100 @@ var render = function () {
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "form-group row" }, [
-                      _c("label", { staticClass: "col-sm-2 col-form-label" }, [
+                      _c("label", { staticClass: "col-sm-3 col-form-label" }, [
                         _vm._v("Телефон"),
                       ]),
                       _vm._v(" "),
-                      _c("div", { staticClass: "input-group mb-3 col-sm-10" }, [
+                      _c("div", { staticClass: "input-group mb-3 col-sm-9" }, [
                         _c("input", {
                           staticClass:
                             "form-control _paste_phone_auto _input_form_for_record",
-                          attrs: {
-                            type: "text",
-                            name: "phone",
-                            "data-inputmask": '"mask": "(999) 999-9999"',
-                            "data-mask": "",
-                            inputmode: "text",
-                          },
+                          attrs: { type: "text", name: "phone" },
                           domProps: { value: _vm.phone },
                         }),
+                        _vm._v(" "),
+                        _vm.phone
+                          ? _c(
+                              "a",
+                              {
+                                staticClass: "input-group-append",
+                                attrs: {
+                                  href: "whatsapp://send?phone=+7" + _vm.phone,
+                                },
+                              },
+                              [_vm._m(1)]
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.phone
+                          ? _c(
+                              "a",
+                              {
+                                staticClass: "input-group-append",
+                                attrs: { href: "tel:+7" + _vm.phone },
+                              },
+                              [_vm._m(2)]
+                            )
+                          : _vm._e(),
                       ]),
                     ]),
                   ]),
                   _vm._v(" "),
-                  _vm._m(1),
+                  _c("div", { staticClass: "card-footer" }, [
+                    _vm.status == 1
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-info _add_user_on_record",
+                            attrs: { type: "submit" },
+                          },
+                          [_vm._v("Записать")]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.status == 2
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-info _confirm_record",
+                            attrs: { type: "button" },
+                          },
+                          [_vm._v("Подтвердить")]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.name
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-info _close_record",
+                            attrs: { type: "button" },
+                          },
+                          [_vm._v("Отменить")]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.isEdit
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-success float-center",
+                            attrs: { type: "submit" },
+                          },
+                          [_vm._v("Сохранить")]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass:
+                          "btn btn-danger float-right _delete_record",
+                        attrs: { type: "button" },
+                      },
+                      [_vm._v("Удалить")]
+                    ),
+                  ]),
                 ]
               ),
             ]),
@@ -53379,34 +53474,22 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-footer" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-info _add_user_on_record",
-          attrs: { type: "submit" },
-        },
-        [_vm._v("Записать")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-success float-center _save_change_record",
-          staticStyle: { display: "inline" },
-          attrs: { "data-record-id": "179", type: "submit" },
-        },
-        [_vm._v("Сохранить")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-danger float-right _delete_record",
-          attrs: { "data-record-id": "179", type: "button" },
-        },
-        [_vm._v("Удалить")]
-      ),
+    return _c("span", { staticClass: "input-group-text" }, [
+      _c("i", {
+        staticClass: "fa fa-whatsapp",
+        attrs: { "aria-hidden": "true" },
+      }),
+    ])
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-text" }, [
+      _c("i", {
+        staticClass: "fa fa-volume-control-phone",
+        attrs: { "aria-hidden": "true" },
+      }),
     ])
   },
 ]

@@ -71,15 +71,23 @@ class CalendarController extends Controller
 
         $name = '';
         $phone = '';
-        if($event->user){
-            $name = $event->user->surname . ' ' . $event->user->name;
-            $phone = $event->user->phone;
+        $status = '';
+        $serviceId = false;
+
+        if($event){
+
+            if($event->user){
+                $name = $event->user->surname . ' ' . $event->user->name;
+                $phone = $event->user->phone;
+            }
+
+
+            if($event->service){
+                $serviceId = $event->service->id;
+            }
+            $status = $event->status;
         }
 
-        $serviceId = false;
-        if($event->service){
-            $serviceId = $event->service->id;
-        }
 
         $date = Carbon::create($event->start);
 
@@ -90,6 +98,7 @@ class CalendarController extends Controller
             'phone' => $phone,
             'serviceId' => $serviceId,
             'services' => $services,
+            'status' => $status,
         ];
 
         return response()->json($data);

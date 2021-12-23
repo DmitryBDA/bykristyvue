@@ -59,7 +59,11 @@ export default {
             alert('hello sdfsdf')
         },
         handleEventClick(el) {
-            this.recordId =  el.event._def.publicId
+            this.recordId = el.event._def.publicId
+            if(this.$refs.action_record.idRecord == this.recordId ){
+                const elem = this.$refs.action_record.$refs.open_modal_action_records;
+                elem.click();
+            }
         },
         handleEvents(events) {
 
@@ -88,7 +92,7 @@ export default {
         <modal-add-record :dateClick="dateClick" @restartCalendar="restartCalendar"></modal-add-record>
         <button style="display: none" data-toggle="modal" data-target="#modal-add-records" ref="open_modal_add_records"></button>
 
-        <modal-action-record :recordId="recordId"></modal-action-record>
+        <modal-action-record ref="action_record" :recordId="recordId"></modal-action-record>
 
 
     </div>
