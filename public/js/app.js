@@ -16360,7 +16360,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['recordId'],
   watch: {
@@ -16376,6 +16375,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.phone = response.data.phone;
         _this.services = response.data.services;
         _this.serviceId = response.data.serviceId;
+        _this.selectedService = response.data.serviceId ? response.data.serviceId : 1;
         _this.status = response.data.status;
         _this.idRecord = newVal;
         var elem = _this.$refs.open_modal_action_records;
@@ -16390,6 +16390,7 @@ __webpack_require__.r(__webpack_exports__);
       name: '',
       phone: '',
       services: '',
+      selectedService: '',
       serviceId: '',
       status: '',
       isEdit: false,
@@ -16398,6 +16399,24 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     console.log('Component mounted.');
+  },
+  methods: {
+    recordUser: function recordUser(recordId) {
+      var _this2 = this;
+
+      axios.post('/admin/calendar/action-with-events', {
+        recordId: recordId,
+        serviceId: this.selectedService,
+        name: this.name,
+        time: this.time,
+        phone: this.phone
+      }).then(function (response) {
+        _this2.$parent.restartCalendar();
+
+        var elem = _this2.$refs.close_modal_action_records;
+        elem.click();
+      });
+    }
   }
 });
 
@@ -53252,7 +53271,29 @@ var render = function () {
       [
         _c("div", { staticClass: "modal-dialog" }, [
           _c("div", { staticClass: "modal-content" }, [
-            _vm._m(0),
+            _c("div", { staticClass: "modal-header" }, [
+              _c("h4", { staticClass: "modal-title" }, [
+                _vm._v("Выбор действия"),
+              ]),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  ref: "close_modal_action_records",
+                  staticClass: "close",
+                  attrs: {
+                    type: "button",
+                    "data-dismiss": "modal",
+                    "aria-label": "Close",
+                  },
+                },
+                [
+                  _c("span", { attrs: { "aria-hidden": "true" } }, [
+                    _vm._v("×"),
+                  ]),
+                ]
+              ),
+            ]),
             _vm._v(" "),
             _c("div", {}, [
               _c(
@@ -53272,9 +53313,25 @@ var render = function () {
                       _vm._v(" "),
                       _c("div", { staticClass: "col-sm-9" }, [
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.time,
+                              expression: "time",
+                            },
+                          ],
                           staticClass: "form-control _input_form_for_record",
-                          attrs: { type: "time", name: "time" },
+                          attrs: { type: "time" },
                           domProps: { value: _vm.time },
+                          on: {
+                            input: function ($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.time = $event.target.value
+                            },
+                          },
                         }),
                       ]),
                     ]),
@@ -53288,30 +53345,45 @@ var render = function () {
                         _c(
                           "select",
                           {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.selectedService,
+                                expression: "selectedService",
+                              },
+                            ],
                             staticClass: "form-control _input_form_for_record",
-                            attrs: { name: "service", required: "" },
+                            attrs: { required: "" },
+                            on: {
+                              change: function ($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function (o) {
+                                    return o.selected
+                                  })
+                                  .map(function (o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.selectedService = $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              },
+                            },
                           },
-                          [
-                            _vm.serviceId == false
-                              ? _c("option", { attrs: { selected: "" } }, [
-                                  _vm._v("Не выбрано"),
-                                ])
-                              : _vm._e(),
-                            _vm._v(" "),
-                            _vm._l(_vm.services, function (item) {
-                              return _c(
-                                "option",
-                                {
-                                  domProps: {
-                                    value: item.id,
-                                    selected: _vm.serviceId == item.id,
-                                  },
+                          _vm._l(_vm.services, function (item) {
+                            return _c(
+                              "option",
+                              {
+                                domProps: {
+                                  value: item.id,
+                                  selected: _vm.serviceId == item.id,
                                 },
-                                [_vm._v(_vm._s(item.name))]
-                              )
-                            }),
-                          ],
-                          2
+                              },
+                              [_vm._v(_vm._s(item.name))]
+                            )
+                          }),
+                          0
                         ),
                       ]),
                     ]),
@@ -53323,6 +53395,14 @@ var render = function () {
                       _vm._v(" "),
                       _c("div", { staticClass: "col-sm-9" }, [
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.name,
+                              expression: "name",
+                            },
+                          ],
                           staticClass:
                             "form-control add_name _input_form_for_record",
                           attrs: {
@@ -53331,6 +53411,14 @@ var render = function () {
                             autocomplete: "off",
                           },
                           domProps: { value: _vm.name },
+                          on: {
+                            input: function ($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.name = $event.target.value
+                            },
+                          },
                         }),
                       ]),
                     ]),
@@ -53342,10 +53430,26 @@ var render = function () {
                       _vm._v(" "),
                       _c("div", { staticClass: "input-group mb-3 col-sm-9" }, [
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.phone,
+                              expression: "phone",
+                            },
+                          ],
                           staticClass:
                             "form-control _paste_phone_auto _input_form_for_record",
                           attrs: { type: "text", name: "phone" },
                           domProps: { value: _vm.phone },
+                          on: {
+                            input: function ($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.phone = $event.target.value
+                            },
+                          },
                         }),
                         _vm._v(" "),
                         _vm.phone
@@ -53357,7 +53461,7 @@ var render = function () {
                                   href: "whatsapp://send?phone=+7" + _vm.phone,
                                 },
                               },
-                              [_vm._m(1)]
+                              [_vm._m(0)]
                             )
                           : _vm._e(),
                         _vm._v(" "),
@@ -53368,7 +53472,7 @@ var render = function () {
                                 staticClass: "input-group-append",
                                 attrs: { href: "tel:+7" + _vm.phone },
                               },
-                              [_vm._m(2)]
+                              [_vm._m(1)]
                             )
                           : _vm._e(),
                       ]),
@@ -53381,7 +53485,12 @@ var render = function () {
                           "button",
                           {
                             staticClass: "btn btn-info _add_user_on_record",
-                            attrs: { type: "submit" },
+                            on: {
+                              click: function ($event) {
+                                $event.preventDefault()
+                                return _vm.recordUser(_vm.recordId)
+                              },
+                            },
                           },
                           [_vm._v("Записать")]
                         )
@@ -53390,10 +53499,7 @@ var render = function () {
                     _vm.status == 2
                       ? _c(
                           "button",
-                          {
-                            staticClass: "btn btn-info _confirm_record",
-                            attrs: { type: "button" },
-                          },
+                          { staticClass: "btn btn-info _confirm_record" },
                           [_vm._v("Подтвердить")]
                         )
                       : _vm._e(),
@@ -53401,10 +53507,7 @@ var render = function () {
                     _vm.name
                       ? _c(
                           "button",
-                          {
-                            staticClass: "btn btn-info _close_record",
-                            attrs: { type: "button" },
-                          },
+                          { staticClass: "btn btn-info _close_record" },
                           [_vm._v("Отменить")]
                         )
                       : _vm._e(),
@@ -53412,10 +53515,7 @@ var render = function () {
                     _vm.isEdit
                       ? _c(
                           "button",
-                          {
-                            staticClass: "btn btn-success float-center",
-                            attrs: { type: "submit" },
-                          },
+                          { staticClass: "btn btn-success float-center" },
                           [_vm._v("Сохранить")]
                         )
                       : _vm._e(),
@@ -53425,7 +53525,6 @@ var render = function () {
                       {
                         staticClass:
                           "btn btn-danger float-right _delete_record",
-                        attrs: { type: "button" },
                       },
                       [_vm._v("Удалить")]
                     ),
@@ -53449,27 +53548,6 @@ var render = function () {
   ])
 }
 var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c("h4", { staticClass: "modal-title" }, [_vm._v("Выбор действия")]),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "close",
-          attrs: {
-            type: "button",
-            "data-dismiss": "modal",
-            "aria-label": "Close",
-          },
-        },
-        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-      ),
-    ])
-  },
   function () {
     var _vm = this
     var _h = _vm.$createElement

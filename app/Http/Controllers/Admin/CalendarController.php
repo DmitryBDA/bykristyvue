@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Record;
 use App\Models\Service;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class CalendarController extends Controller
 {
@@ -103,5 +106,40 @@ class CalendarController extends Controller
 
         return response()->json($data);
 
+    }
+
+    public function actionWithEvents(Request $request){
+
+        $data = $request->all();
+        $record = Record::find($data['recordId']);
+
+        $user = User::where('phone', $data['phone'])->first();
+
+        if(!$user){
+
+            $arFio = explode(" ", $data['name']);
+            $surname = $arFio[0];
+            $name = $arFio[1];
+
+            $lastId = User::orderBy('id', 'desc')->get()->first()->id;
+            $lastId++;
+            $dataUser = [
+                'name' => $name,
+                'surname' => $surname,
+                'phone' => $data['phone'],
+                'password' => Hash::make(Str::random(8)),
+                'email' => "user$lastId@user.com",
+            ];
+            $user = User::create($dataUser);
+
+        }
+
+        $record->update([
+            'user_id' => $user->id,
+            'status' => 3,
+            'service_id' => $data['serviceId']
+        ]);
+
+        return response()->json($record);
     }
 }
