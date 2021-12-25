@@ -49,6 +49,7 @@ export default {
             currentEvents: [],
             dateClick:'',
             recordId:'',
+            dataRecord: []
         }
     },
     methods: {
@@ -60,10 +61,10 @@ export default {
         },
         handleEventClick(el) {
             this.recordId = el.event._def.publicId
-            if(this.$refs.action_record.idRecord == this.recordId ){
-                const elem = this.$refs.action_record.$refs.open_modal_action_records;
-                elem.click();
-            }
+            axios.post('/admin/calendar/get-data-record', {recordId:this.recordId})
+                .then((response)=>{
+                    this.dataRecord = response.data
+                })
         },
         handleEvents(events) {
 
@@ -92,7 +93,7 @@ export default {
         <modal-add-record :dateClick="dateClick" @restartCalendar="restartCalendar"></modal-add-record>
         <button style="display: none" data-toggle="modal" data-target="#modal-add-records" ref="open_modal_add_records"></button>
 
-        <modal-action-record ref="action_record" :recordId="recordId"></modal-action-record>
+        <modal-action-record ref="action_record" :dataRecord="dataRecord" :recordId="recordId"></modal-action-record>
 
 
     </div>

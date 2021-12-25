@@ -73,42 +73,31 @@
 
 <script>
 export default {
-    props:['recordId'],
+    props:['recordId', 'dataRecord'],
     watch: {
-        recordId: function(newVal, oldVal) {
-            axios.post('/admin/calendar/get-data-record', {recordId:newVal})
-                .then((response)=>{
-
-                    this.date = response.data.date
-                    this.time = response.data.time
-                    this.name = response.data.name
-                    this.phone = response.data.phone
-                    this.services = response.data.services
-                    this.serviceId = response.data.serviceId
-                    this.selectedService = response.data.serviceId ? response.data.serviceId : 1
-                    this.status = response.data.status
-                    this.idRecord = newVal
-                    const elem = this.$refs.open_modal_action_records;
-                    elem.click();
-            })
+        dataRecord: function(newVal, oldVal) {
+            this.date = newVal.date
+            this.time = newVal.time
+            this.name = newVal.name
+            this.phone = newVal.phone
+            this.services = newVal.services
+            this.serviceId = newVal.serviceId
+            this.selectedService = newVal.serviceId ? newVal.serviceId : 1
+            this.status = newVal.status
+            const elem = this.$refs.open_modal_action_records;
+            elem.click();
         }
     },
     data() {
         return {
-            date: '',
-            time:'',
-            name: '',
-            phone: '',
-            services: '',
-            selectedService: '',
-            serviceId: '',
-            status: '',
-            isEdit: false,
-            idRecord:'',
+            date: '', time:'', name: '',
+            phone: '', services: '', selectedService: '',
+            serviceId: '', status: '', isEdit: false,
+            isDataIsset: this.$props.dataRecord.length
         }
     },
     mounted() {
-        console.log('Component mounted.')
+        console.log()
     },
     methods: {
         recordUser(recordId){

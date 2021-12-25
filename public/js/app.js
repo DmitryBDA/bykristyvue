@@ -16204,7 +16204,8 @@ __webpack_require__.r(__webpack_exports__);
       },
       currentEvents: [],
       dateClick: '',
-      recordId: ''
+      recordId: '',
+      dataRecord: []
     };
   },
   methods: {
@@ -16213,12 +16214,14 @@ __webpack_require__.r(__webpack_exports__);
       alert('hello sdfsdf');
     },
     handleEventClick: function handleEventClick(el) {
-      this.recordId = el.event._def.publicId;
+      var _this = this;
 
-      if (this.$refs.action_record.idRecord == this.recordId) {
-        var elem = this.$refs.action_record.$refs.open_modal_action_records;
-        elem.click();
-      }
+      this.recordId = el.event._def.publicId;
+      axios.post('/admin/calendar/get-data-record', {
+        recordId: this.recordId
+      }).then(function (response) {
+        _this.dataRecord = response.data;
+      });
     },
     handleEvents: function handleEvents(events) {},
     clickDate: function clickDate(event) {
@@ -16227,10 +16230,10 @@ __webpack_require__.r(__webpack_exports__);
       elem.click();
     },
     showRecords: function showRecords() {
-      var _this = this;
+      var _this2 = this;
 
       axios.get('/admin/calendar/records').then(function (response) {
-        _this.calendarOptions.events = response.data;
+        _this2.calendarOptions.events = response.data;
       });
     },
     restartCalendar: function restartCalendar() {
@@ -16361,26 +16364,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['recordId'],
+  props: ['recordId', 'dataRecord'],
   watch: {
-    recordId: function recordId(newVal, oldVal) {
-      var _this = this;
-
-      axios.post('/admin/calendar/get-data-record', {
-        recordId: newVal
-      }).then(function (response) {
-        _this.date = response.data.date;
-        _this.time = response.data.time;
-        _this.name = response.data.name;
-        _this.phone = response.data.phone;
-        _this.services = response.data.services;
-        _this.serviceId = response.data.serviceId;
-        _this.selectedService = response.data.serviceId ? response.data.serviceId : 1;
-        _this.status = response.data.status;
-        _this.idRecord = newVal;
-        var elem = _this.$refs.open_modal_action_records;
-        elem.click();
-      });
+    dataRecord: function dataRecord(newVal, oldVal) {
+      this.date = newVal.date;
+      this.time = newVal.time;
+      this.name = newVal.name;
+      this.phone = newVal.phone;
+      this.services = newVal.services;
+      this.serviceId = newVal.serviceId;
+      this.selectedService = newVal.serviceId ? newVal.serviceId : 1;
+      this.status = newVal.status;
+      var elem = this.$refs.open_modal_action_records;
+      elem.click();
     }
   },
   data: function data() {
@@ -16394,15 +16390,15 @@ __webpack_require__.r(__webpack_exports__);
       serviceId: '',
       status: '',
       isEdit: false,
-      idRecord: ''
+      isDataIsset: this.$props.dataRecord.length
     };
   },
   mounted: function mounted() {
-    console.log('Component mounted.');
+    console.log();
   },
   methods: {
     recordUser: function recordUser(recordId) {
-      var _this2 = this;
+      var _this = this;
 
       axios.post('/admin/calendar/action-with-events', {
         recordId: recordId,
@@ -16411,9 +16407,9 @@ __webpack_require__.r(__webpack_exports__);
         time: this.time,
         phone: this.phone
       }).then(function (response) {
-        _this2.$parent.restartCalendar();
+        _this.$parent.restartCalendar();
 
-        var elem = _this2.$refs.close_modal_action_records;
+        var elem = _this.$refs.close_modal_action_records;
         elem.click();
       });
     }
@@ -53187,7 +53183,7 @@ var render = function () {
       _vm._v(" "),
       _c("modal-action-record", {
         ref: "action_record",
-        attrs: { recordId: _vm.recordId },
+        attrs: { dataRecord: _vm.dataRecord, recordId: _vm.recordId },
       }),
     ],
     1
