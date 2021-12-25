@@ -5,7 +5,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Выбор действия</h4>
-                        <button type="button" class="close" data-dismiss="modal" ref="close_modal_action_records" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" ref="close_modal_action_records"
+                                aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -25,28 +26,39 @@
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Услуга</label>
                                     <div class="col-sm-9">
-                                        <select v-model="selectedService" class="form-control _input_form_for_record" required="">
-                                            <option v-for="item in services" :value="item.id" :selected="serviceId==item.id">{{item.name }}</option>
+                                        <select v-model="selectedService" class="form-control _input_form_for_record"
+                                                required="">
+                                            <option v-for="item in services" :value="item.id"
+                                                    :selected="serviceId==item.id">{{ item.name }}
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Имя</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control add_name _input_form_for_record" name="name" autocomplete="off" v-model="name">
+                                        <input type="text" :class="isNameValid === true ? 'is-invalid': ''"
+                                               class="form-control add_name _input_form_for_record" name="name"
+                                               autocomplete="off" v-model="name">
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Телефон</label>
                                     <div class="input-group mb-3 col-sm-9">
-                                        <input type="text" name="phone" class="form-control _paste_phone_auto _input_form_for_record" v-model="phone">
+                                        <input type="text" name="phone"
+                                               class="form-control _paste_phone_auto _input_form_for_record"
+                                               :class="isPhoneValid === true ? 'is-invalid': ''"
+                                               v-model="phone">
 
-                                        <a  v-if="phone" :href="'whatsapp://send?phone=+7' + phone" class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-whatsapp" aria-hidden="true"></i></span>
+                                        <a v-if="phone" :href="'whatsapp://send?phone=+7' + phone"
+                                           class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-whatsapp"
+                                                                              aria-hidden="true"></i></span>
                                         </a>
-                                        <a v-if="phone" :href="'tel:+7' + phone"  class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-volume-control-phone" aria-hidden="true"></i></span>
+                                        <a v-if="phone" :href="'tel:+7' + phone" class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-volume-control-phone"
+                                                                              aria-hidden="true"></i></span>
                                         </a>
 
                                     </div>
@@ -55,8 +67,10 @@
                             </div>
                             <!-- /.card-body -->
                             <div class="card-footer">
-                                <button v-if="status == 1" @click.prevent="recordUser(recordId)" class="btn btn-info _add_user_on_record">Записать</button>
-                                <button v-if="status == 2"  class="btn btn-info _confirm_record">Подтвердить</button>
+                                <button v-if="status == 1" @click.prevent="recordUser(recordId)"
+                                        class="btn btn-info _add_user_on_record">Записать
+                                </button>
+                                <button v-if="status == 2" class="btn btn-info _confirm_record">Подтвердить</button>
                                 <button v-if="name" class="btn btn-info _close_record">Отменить</button>
                                 <button v-if="isEdit" class="btn btn-success float-center">Сохранить</button>
                                 <button class="btn btn-danger float-right _delete_record">Удалить</button>
@@ -67,15 +81,22 @@
                 </div>
             </div>
         </div>
-        <button style="display: none" data-toggle="modal" data-target="#modal-action-with-records" ref="open_modal_action_records"></button>
+        <button style="display: none" data-toggle="modal" data-target="#modal-action-with-records"
+                ref="open_modal_action_records"></button>
     </div>
 </template>
 
 <script>
+import useVuelidate from '@vuelidate/core'
+import {required, minLength, maxLength} from '@vuelidate/validators'
+
 export default {
-    props:['recordId', 'dataRecord'],
+    setup() {
+        return {v$: useVuelidate()}
+    },
+    props: ['recordId', 'dataRecord'],
     watch: {
-        dataRecord: function(newVal, oldVal) {
+        dataRecord: function (newVal, oldVal) {
             this.date = newVal.date
             this.time = newVal.time
             this.name = newVal.name
@@ -84,36 +105,71 @@ export default {
             this.serviceId = newVal.serviceId
             this.selectedService = newVal.serviceId ? newVal.serviceId : 1
             this.status = newVal.status
+
+            this.isNameValid = false
+            this.isPhoneValid = false
+
             const elem = this.$refs.open_modal_action_records;
             elem.click();
         }
     },
     data() {
         return {
-            date: '', time:'', name: '',
+            date: '', time: '', name: null,
             phone: '', services: '', selectedService: '',
             serviceId: '', status: '', isEdit: false,
-            isDataIsset: this.$props.dataRecord.length
+            isDataIsset: this.$props.dataRecord.length,
+            isNameValid: false,
+            isPhoneValid: false
         }
     },
     mounted() {
         console.log()
     },
     methods: {
-        recordUser(recordId){
-            axios.post('/admin/calendar/action-with-events', {
-                recordId:recordId,
-                serviceId:this.selectedService,
-                name:this.name,
-                time:this.time,
-                phone:this.phone}
-            )
-            .then((response)=>{
-                this.$parent.restartCalendar()
-                const elem = this.$refs.close_modal_action_records
-                elem.click();
-            })
-        }
+        recordUser(recordId) {
+            let error = true
+            if (!this.v$.name.simpleValidator.$response) {
+                this.isNameValid = true
+                error = false
+            } else {
+                this.isNameValid = false
+            }
+            if (this.v$.phone.$invalid) {
+                this.isPhoneValid = true
+                error = false
+            }else {
+                this.isNameValid = false
+            }
+
+            if (error) {
+                axios.post('/admin/calendar/action-with-events', {
+                        recordId: recordId,
+                        serviceId: this.selectedService,
+                        name: this.name,
+                        time: this.time,
+                        phone: this.phone
+                    }
+                )
+                    .then((response) => {
+                        this.$parent.restartCalendar()
+                        const elem = this.$refs.close_modal_action_records
+                        this.isNameValid = false
+                        elem.click();
+                    })
+            }
+        },
+    },
+    validations: {
+        name: {
+            simpleValidator(value) {
+                String.prototype.countWords = function () {
+                    return this.split(/\s+/).length;
+                }
+                return value.match(/(\w+)/g).length == 2
+            }
+        },
+        phone: {required, minLength: minLength(10), maxLength: maxLength(10)}
     }
 }
 
