@@ -28,6 +28,9 @@ Route::get('/admin/calendar/records', [CalendarController::class, 'records'])->n
 Route::post('/admin/calendar/create-records', [CalendarController::class, 'createRecords'])->name('admin.calendar.create.records');
 Route::post('/admin/calendar/get-data-record', [CalendarController::class, 'getDataRecord'])->name('admin.calendar.data.record');
 Route::post('/admin/calendar/action-with-events', [CalendarController::class, 'actionWithEvents'])->name('admin.calendar.actions.record');
+Route::post('/admin/calendar/confirm-record', [CalendarController::class, 'confirmRecord'])->name('admin.calendar.confirmRecord');
+Route::post('/admin/calendar/cancel-record', [CalendarController::class, 'cancelRecord'])->name('admin.calendar.cancelRecord');
+Route::post('/admin/calendar/delete-record', [CalendarController::class, 'deleteRecord'])->name('admin.calendar.deleteRecord');
 Route::post('/admin/calendar/search-autocomplete', [CalendarController::class, 'searchAutocomplete'])->name('admin.calendar.searchAutocomplete');
 //Auth::routes();
 

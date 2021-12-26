@@ -80,10 +80,10 @@
                                 <button v-if="status == 1" @click.prevent="recordUser(recordId)"
                                         class="btn btn-info _add_user_on_record">Записать
                                 </button>
-                                <button v-if="status == 2" class="btn btn-info _confirm_record">Подтвердить</button>
-                                <button v-if="name" class="btn btn-info _close_record">Отменить</button>
+                                <button v-if="status == 2" @click.preven="confirmRecord(recordId)" class="btn btn-info">Подтвердить</button>
+                                <button v-if="name" @click.prevent="cancelRecord(recordId)" class="btn btn-info">Отменить</button>
                                 <button v-if="isEdit" class="btn btn-success float-center">Сохранить</button>
-                                <button class="btn btn-danger float-right _delete_record">Удалить</button>
+                                <button class="btn btn-danger float-right" @click.prevent="deleteRecord(recordId)">Удалить</button>
                             </div>
                             <!-- /.card-footer -->
                         </form>
@@ -189,7 +189,41 @@ export default {
             this.name = name
             this.phone = phone
             this.isActiveSearch = false
-        }
+        },
+        confirmRecord(recordId){
+            axios.post('/admin/calendar/confirm-record', {
+                    recordId: recordId,
+                }
+            )
+                .then((response) => {
+                    this.$parent.restartCalendar()
+                    const elem = this.$refs.close_modal_action_records
+                    elem.click();
+                })
+        },
+        cancelRecord(recordId){
+            axios.post('/admin/calendar/cancel-record', {
+                    recordId: recordId,
+                }
+            )
+                .then((response) => {
+                    this.$parent.restartCalendar()
+                    const elem = this.$refs.close_modal_action_records
+                    elem.click();
+                })
+        },
+        deleteRecord(recordId){
+            axios.post('/admin/calendar/delete-record', {
+                    recordId: recordId,
+                }
+            )
+                .then((response) => {
+                    this.$parent.restartCalendar()
+                    const elem = this.$refs.close_modal_action_records
+                    elem.click();
+                })
+        },
+
     },
     validations: {
         name: {

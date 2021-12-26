@@ -165,4 +165,30 @@ class CalendarController extends Controller
         }
         return response()->json($name);
     }
+
+    public function confirmRecord(Request $request){
+        $recordId = $request->recordId;
+
+        $obRecord = Record::find($recordId);
+        $obRecord->update(['status' => 3]);
+        return response()->json($obRecord);
+    }
+    public function cancelRecord(Request $request){
+        $recordId = $request->recordId;
+
+        $obRecord = Record::find($recordId);
+        $obRecord->update([
+            'status' => 1,
+            'user_id' => null,
+            'service_id' => null,
+            ]);
+        return response()->json($obRecord);
+    }
+    public function deleteRecord(Request $request){
+        $recordId = $request->recordId;
+        $obRecord = Record::find($recordId)->delete();
+
+        return response()->json($obRecord);
+    }
+
 }

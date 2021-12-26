@@ -18573,6 +18573,42 @@ __webpack_require__.r(__webpack_exports__);
       this.name = name;
       this.phone = phone;
       this.isActiveSearch = false;
+    },
+    confirmRecord: function confirmRecord(recordId) {
+      var _this3 = this;
+
+      axios.post('/admin/calendar/confirm-record', {
+        recordId: recordId
+      }).then(function (response) {
+        _this3.$parent.restartCalendar();
+
+        var elem = _this3.$refs.close_modal_action_records;
+        elem.click();
+      });
+    },
+    cancelRecord: function cancelRecord(recordId) {
+      var _this4 = this;
+
+      axios.post('/admin/calendar/cancel-record', {
+        recordId: recordId
+      }).then(function (response) {
+        _this4.$parent.restartCalendar();
+
+        var elem = _this4.$refs.close_modal_action_records;
+        elem.click();
+      });
+    },
+    deleteRecord: function deleteRecord(recordId) {
+      var _this5 = this;
+
+      axios.post('/admin/calendar/delete-record', {
+        recordId: recordId
+      }).then(function (response) {
+        _this5.$parent.restartCalendar();
+
+        var elem = _this5.$refs.close_modal_action_records;
+        elem.click();
+      });
     }
   },
   validations: {
@@ -55727,7 +55763,26 @@ var render = function () {
                     _vm.status == 2
                       ? _c(
                           "button",
-                          { staticClass: "btn btn-info _confirm_record" },
+                          {
+                            staticClass: "btn btn-info",
+                            on: {
+                              click: function ($event) {
+                                if (
+                                  !$event.type.indexOf("key") &&
+                                  _vm._k(
+                                    $event.keyCode,
+                                    "preven",
+                                    undefined,
+                                    $event.key,
+                                    undefined
+                                  )
+                                ) {
+                                  return null
+                                }
+                                return _vm.confirmRecord(_vm.recordId)
+                              },
+                            },
+                          },
                           [_vm._v("Подтвердить")]
                         )
                       : _vm._e(),
@@ -55735,7 +55790,15 @@ var render = function () {
                     _vm.name
                       ? _c(
                           "button",
-                          { staticClass: "btn btn-info _close_record" },
+                          {
+                            staticClass: "btn btn-info",
+                            on: {
+                              click: function ($event) {
+                                $event.preventDefault()
+                                return _vm.cancelRecord(_vm.recordId)
+                              },
+                            },
+                          },
                           [_vm._v("Отменить")]
                         )
                       : _vm._e(),
@@ -55751,8 +55814,13 @@ var render = function () {
                     _c(
                       "button",
                       {
-                        staticClass:
-                          "btn btn-danger float-right _delete_record",
+                        staticClass: "btn btn-danger float-right",
+                        on: {
+                          click: function ($event) {
+                            $event.preventDefault()
+                            return _vm.deleteRecord(_vm.recordId)
+                          },
+                        },
                       },
                       [_vm._v("Удалить")]
                     ),
