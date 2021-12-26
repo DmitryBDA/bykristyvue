@@ -143,7 +143,7 @@ export default {
     methods: {
         recordUser(recordId) {
             let error = true
-            if (!this.v$.name.simpleValidator.$response) {
+            if (this.v$.name.$invalid) {
                 this.isNameValid = true
                 error = false
             } else {
@@ -153,7 +153,7 @@ export default {
                 this.isPhoneValid = true
                 error = false
             } else {
-                this.isNameValid = false
+                this.isPhoneValid = false
             }
 
             if (error) {
@@ -228,10 +228,12 @@ export default {
     validations: {
         name: {
             simpleValidator(value) {
-                String.prototype.countWords = function () {
-                    return this.split(/\s+/).length;
+                if(value){
+                    return value.match(/([A-Za-zа-яА-ЯеЁ]+)/g).length == 2
+                } else {
+                    return false
                 }
-                return value.match(/(\w+)/g).length == 2
+
             }
         },
         phone: {required, minLength: minLength(10), maxLength: maxLength(10)}
