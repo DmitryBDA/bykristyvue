@@ -29,22 +29,27 @@ class CalendarController extends Controller
             ->get(['id', 'title', 'start', 'end', 'status', 'all_day']);
 
         foreach ($data as $elem) {
-            switch ($elem->status){
+            switch ($elem->status) {
                 case 1:
-                    $elem->setAttr('className', "greenEvent");break;
-                Case 2:
-                    $elem->setAttr('className', "yellowEvent");break;
-                Case 3:
-                    $elem->setAttr('className', "redEvent");break;
-                Case 4:
-                    $elem->setAttr('className', "greyEvent");break;
+                    $elem->setAttr('className', "greenEvent");
+                    break;
+                case 2:
+                    $elem->setAttr('className', "yellowEvent");
+                    break;
+                case 3:
+                    $elem->setAttr('className', "redEvent");
+                    break;
+                case 4:
+                    $elem->setAttr('className', "greyEvent");
+                    break;
             }
         }
 
         return response()->json($data);
     }
 
-    public function createRecords(Request $request){
+    public function createRecords(Request $request)
+    {
 
         $data = $request->date;
         $arrRecords = $request->timeRecords;
@@ -53,7 +58,7 @@ class CalendarController extends Controller
 
             $date = $request->date . ' ' . $record['value'];
             $arrData = [
-                'title' => $record['title'] ? $record['title']: '',
+                'title' => $record['title'] ? $record['title'] : '',
                 'start' => $date,
                 'end' => $date,
                 'status' => $record['status']
@@ -65,7 +70,8 @@ class CalendarController extends Controller
 
     }
 
-    public function getDataRecord(Request $request){
+    public function getDataRecord(Request $request)
+    {
 
         $recordId = $request->recordId;
         $services = Service::all();
@@ -77,15 +83,15 @@ class CalendarController extends Controller
         $status = '';
         $serviceId = false;
 
-        if($event){
+        if ($event) {
 
-            if($event->user){
+            if ($event->user) {
                 $name = $event->user->surname . ' ' . $event->user->name;
                 $phone = $event->user->phone;
             }
 
 
-            if($event->service){
+            if ($event->service) {
                 $serviceId = $event->service->id;
             }
             $status = $event->status;
@@ -108,14 +114,15 @@ class CalendarController extends Controller
 
     }
 
-    public function actionWithEvents(Request $request){
+    public function actionWithEvents(Request $request)
+    {
 
         $data = $request->all();
         $record = Record::find($data['recordId']);
 
         $user = User::where('phone', $data['phone'])->first();
 
-        if(!$user){
+        if (!$user) {
 
             $arFio = explode(" ", $data['name']);
             $surname = $arFio[0];
@@ -141,5 +148,21 @@ class CalendarController extends Controller
         ]);
 
         return response()->json($record);
+    }
+
+    public function searchAutocomplete(Request $request)
+    {
+        $query = $request->str;
+        $users = User::where('name', 'LIKE', '%'.$query.'%')
+            ->orWhere('surname', 'LIKE', '%'.$query.'%')
+            ->get();
+
+        $name = [];
+        if($users){
+            foreach ($users as $user) {
+                $name[$user->phone] = $user->surname . ' ' . $user->name;
+            }
+        }
+        return response()->json($name);
     }
 }

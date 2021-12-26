@@ -38,8 +38,16 @@
                                     <label class="col-sm-3 col-form-label">Имя</label>
                                     <div class="col-sm-9">
                                         <input type="text" :class="isNameValid === true ? 'is-invalid': ''"
-                                               class="form-control add_name _input_form_for_record" name="name"
+                                               class="form-control input-lg add_name _input_form_for_record" name="name"
+                                               @keyup="getDataAutocomplete()"
                                                autocomplete="off" v-model="name">
+                                        <div v-if="isActiveSearch" class="panel-footer"
+                                             style="position: absolute;z-index: 1;">
+                                            <ul class="list-group">
+                                                <a href="#" @click.prevent="pasteName(name, phone)" class="list-group-item"
+                                                   v-for="(name, phone) in search_data">{{ name }}</a>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -49,14 +57,16 @@
                                         <input type="text" name="phone"
                                                class="form-control _paste_phone_auto _input_form_for_record"
                                                :class="isPhoneValid === true ? 'is-invalid': ''"
+                                               v-mask="'##########'"
                                                v-model="phone">
 
-                                        <a v-if="phone" :href="'whatsapp://send?phone=+7' + phone"
+                                        <a v-if="!this.v$.phone.$invalid" :href="'whatsapp://send?phone=+7' + phone"
                                            class="input-group-append">
                                             <span class="input-group-text"><i class="fa fa-whatsapp"
                                                                               aria-hidden="true"></i></span>
                                         </a>
-                                        <a v-if="phone" :href="'tel:+7' + phone" class="input-group-append">
+                                        <a v-if="!this.v$.phone.$invalid" :href="'tel:+7' + phone"
+                                           class="input-group-append">
                                             <span class="input-group-text"><i class="fa fa-volume-control-phone"
                                                                               aria-hidden="true"></i></span>
                                         </a>
@@ -89,8 +99,10 @@
 <script>
 import useVuelidate from '@vuelidate/core'
 import {required, minLength, maxLength} from '@vuelidate/validators'
+import {mask} from 'vue-the-mask'
 
 export default {
+    directives: {mask},
     setup() {
         return {v$: useVuelidate()}
     },
@@ -120,11 +132,13 @@ export default {
             serviceId: '', status: '', isEdit: false,
             isDataIsset: this.$props.dataRecord.length,
             isNameValid: false,
-            isPhoneValid: false
+            isPhoneValid: false,
+            search_data: [],
+            isActiveSearch: false
         }
     },
     mounted() {
-        console.log()
+
     },
     methods: {
         recordUser(recordId) {
@@ -138,7 +152,7 @@ export default {
             if (this.v$.phone.$invalid) {
                 this.isPhoneValid = true
                 error = false
-            }else {
+            } else {
                 this.isNameValid = false
             }
 
@@ -159,6 +173,23 @@ export default {
                     })
             }
         },
+        getDataAutocomplete() {
+            this.search_data = []
+
+            if (this.name != '') {
+                axios.post('/admin/calendar/search-autocomplete', {str: this.name})
+                    .then((response) => {
+                        this.search_data = response.data
+                        this.isActiveSearch = true
+                    })
+            }
+
+        },
+        pasteName(name, phone) {
+            this.name = name
+            this.phone = phone
+            this.isActiveSearch = false
+        }
     },
     validations: {
         name: {
