@@ -82,7 +82,7 @@
                                 </button>
                                 <button v-if="status == 2" @click.preven="confirmRecord(recordId)" class="btn btn-info">Подтвердить</button>
                                 <button v-if="name" @click.prevent="cancelRecord(recordId)" class="btn btn-info">Отменить</button>
-                                <button v-if="isEdit" class="btn btn-success float-center">Сохранить</button>
+                                <button v-if="isEdit" @click.prevent="recordUser(recordId)" class="btn btn-success float-center">Сохранить</button>
                                 <button class="btn btn-danger float-right" @click.prevent="deleteRecord(recordId)">Удалить</button>
                             </div>
                             <!-- /.card-footer -->
@@ -129,7 +129,7 @@ export default {
         return {
             date: '', time: '', name: null,
             phone: '', services: '', selectedService: '',
-            serviceId: '', status: '', isEdit: false,
+            serviceId: '', status: '', isEdit: true,
             isDataIsset: this.$props.dataRecord.length,
             isNameValid: false,
             isPhoneValid: false,

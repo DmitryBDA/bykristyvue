@@ -18510,7 +18510,7 @@ __webpack_require__.r(__webpack_exports__);
       selectedService: '',
       serviceId: '',
       status: '',
-      isEdit: false,
+      isEdit: true,
       isDataIsset: this.$props.dataRecord.length,
       isNameValid: false,
       isPhoneValid: false,
@@ -55806,7 +55806,15 @@ var render = function () {
                     _vm.isEdit
                       ? _c(
                           "button",
-                          { staticClass: "btn btn-success float-center" },
+                          {
+                            staticClass: "btn btn-success float-center",
+                            on: {
+                              click: function ($event) {
+                                $event.preventDefault()
+                                return _vm.recordUser(_vm.recordId)
+                              },
+                            },
+                          },
                           [_vm._v("Сохранить")]
                         )
                       : _vm._e(),
